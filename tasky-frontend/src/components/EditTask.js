@@ -11,7 +11,7 @@ function EditTask() {
     // console.log(state.e);
     const [edittask, setEdittask] = useState({
         taskname: state.name,
-        deadline: "",
+        deadline: state.deadline,
         isCompleted:Boolean()
     })
     // console.log(edittask);

@@ -94,7 +94,7 @@ function Signup({ alert, showAlert }) {
 
           </form>
         </div>
-        <img src={giffi} style={{ height: "500px", width: "450px", marginRight: "-30px" }} alt="task" />
+        <img src={giffi} style={{ height: "50%", width: "40%", marginRight: "30px" }} alt="task" />
       </div>
     </>
   )

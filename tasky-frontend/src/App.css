@@ -98,15 +98,16 @@ Body {
 
 }
 
-.content h1{
-  margin: 0;
+/* .content h1{
+  margin: 10;
   width: 50%;
-}
+} */
 
 
 .tag{
   font-size: 70px;
-  
+  margin-top:15%;
+  width: 50%;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
  .tag-sub{
@@ -150,7 +151,7 @@ Body {
 .giffi{
   width: 40%;
   height: 40%;
-  margin-top: -40px;
+  margin-top: 40px;
 }
 
 /* form */
@@ -249,11 +250,11 @@ input[type="button"]:hover{
   margin: 0px 120px  ;
 }
 
-.flex2-box img{
-  height: 100%;
-  width: 40%;
+/* .flex2-box img{
+  height: 50%;
+  width: 50%;
   
-}
+} */
 
 .redirect-to{
   text-decoration:none;

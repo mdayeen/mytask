@@ -71,7 +71,7 @@ function Login({ alert, showAlert }) {
 
       <div className='flex2-box' >
 
-        <div>
+        <div style={{margin:"9%"}}>
           <form className='reg-form' onSubmit={onSubmitHandler}>
 
             <h1 style={{ color: "#006E7F", fontFamily: "cursive" }}>LOGIN</h1>

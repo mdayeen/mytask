@@ -14,9 +14,9 @@ function Dashboard(loading) {
   let [tasks, setTasks] = useState([]);
   console.log(tasks);
 
-  function navigating(e, name) {
+  function navigating(e, name, deadline, isCompleted) {
     console.log(e);
-    navigate("/edittask", { state: { e, name } });
+    navigate("/edittask", { state: { e, name, deadline, isCompleted } });
   }
 
   useEffect(() => {
@@ -129,7 +129,7 @@ function Dashboard(loading) {
                         "0"
                       );
 
-                      return `Date: ${day}/${month}/${year} at Time: ${hours}:${minutes}`;
+                      return <span><span style={{color:"red"}}>Date:</span> {day}/{month}/{year} at <span style={{color:"red"}}>Time:</span> {hours}:{minutes}</span>;
                     })()}
                   </td>
                   <td>{task.taskname}</td>
@@ -153,7 +153,7 @@ function Dashboard(loading) {
                     <button
                       style={{ cursor: "pointer" }}
                       type="button"
-                      onClick={() => navigating(task._id, task.taskname)}
+                      onClick={() => navigating(task._id, task.taskname, task.deadline, task.isCompleted)}
                     >
                       Edit
                     </button>

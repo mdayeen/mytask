@@ -1,51 +1,102 @@
-import React from 'react'
+import React from 'react';
+import { Routes, Route } from "react-router-dom";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import CssBaseline from '@mui/material/CssBaseline';
 
 import Navbar from './components/Navbar';
 import Body from './components/Body';
-
-import './App.css';
-import { Routes, Route } from "react-router-dom"
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import PrivateRoutes from './components/PrivateRoutes';
-
 import Signup from './components/Signup';
 import Login from './components/Login';
-import AddTask from './components/Addtask';
-import EditTask from './components/EditTask';
-import Dashboard from './components/Dashbord';
+import Dashboard from './components/Dashboard';
 import About from './components/About';
+import PrivateRoutes from './components/PrivateRoutes';
+
+import './App.css';
+
+// Create theme instance
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#4568dc',
+      light: '#6b8ae4',
+      dark: '#2a4cb3',
+    },
+    secondary: {
+      main: '#006E7F',
+      light: '#338d9d',
+      dark: '#004d59',
+    },
+    background: {
+      default: '#f8f9fa',
+      paper: '#ffffff',
+    },
+  },
+  typography: {
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    button: {
+      textTransform: 'none',
+      fontWeight: 600,
+    },
+  },
+  shape: {
+    borderRadius: 8,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+          padding: '8px 16px',
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
+        },
+      },
+    },
+  },
+});
 
 function App() {
-
-  const [alert, setAlert] = useState(null);
-  const [taskData, settaskData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = React.useState(null);
 
   const showAlert = (data) => {
     setAlert({
       type: data.type,
       msg: data.msg
-    })
+    });
     setTimeout(() => {
       setAlert(null);
-    }, 4000)
-  }
+    }, 4000);
+  };
+
   return (
-    <>
-       <Navbar />
-      <Routes>
-      <Route path='/about' element={<About />} />
-        <Route path="/" element={<Body taskData={taskData} loading={loading} />} />
-        <Route path="/signup" element={<Signup alert={alert} showAlert={showAlert} />} />
-        <Route path="/login" element={<Login alert={alert} showAlert={showAlert} />} />
-        <Route element={<PrivateRoutes />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path='/addtask' element={<AddTask />} />
-        <Route path='/edittask' element={<EditTask />} />
-        </Route>
-      </Routes>
-    </>
+    <ThemeProvider theme={theme}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <CssBaseline />
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Body />} />
+          <Route path="/about" element={<About />} />
+          <Route 
+            path="/signup" 
+            element={<Signup alert={alert} showAlert={showAlert} />} 
+          />
+          <Route 
+            path="/login" 
+            element={<Login alert={alert} showAlert={showAlert} />} 
+          />
+          <Route element={<PrivateRoutes />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+        </Routes>
+      </LocalizationProvider>
+    </ThemeProvider>
   );      
 }
 

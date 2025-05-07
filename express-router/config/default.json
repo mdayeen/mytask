@@ -10,11 +10,11 @@
   },
   
   "EMAIL_SMTP": {
-    "HOST": "mail.csmafia.com",
+    "HOST": "live.smtp.mailtrap.io",
     "AUTH": {
-      "USER": "cfi@csmafia.com",
-      "PASSWORD": "codeforindiaFTW"
+      "USER": "api",
+      "PASSWORD": "41db9e578431193f888e7464e944a129"
     },
-    "PORT": 465
+    "PORT": 587
   }
 }

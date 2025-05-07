@@ -8,22 +8,58 @@ async function sendEmail(mailBody) {
         let transporter = nodemailer.createTransport({
             host: HOST,
             port: PORT,
-            secure: true,
+            // secure: false,
             auth: {
                 user: AUTH["USER"],
                 pass: AUTH["PASSWORD"]
-            }
+            },
+            // tls: {
+            //     rejectUnauthorized: false
+            // }
         });
+
+        // Log the email configuration (excluding password)
+        console.log('Email Configuration:', {
+            host: HOST,
+            port: PORT,
+            user: AUTH["USER"],
+            secure: false
+        });
+
+        // Verify connection configuration
+        await transporter.verify();
+        console.log('SMTP connection verified successfully');
+
+        // Log the email being sent
+        console.log('Attempting to send email to:', mailBody.to);
+        console.log('Email subject:', mailBody.subject);
+
         let info = await transporter.sendMail({
-            from: `CFI Tasky Solutions <${AUTH["USER"]}>`,
+            from: {
+                name: 'CFI Tasky Solutions',
+                address: AUTH["USER"]
+            },
             subject: mailBody.subject,
             to: mailBody.to,
-            // body:"This is SImple Plain Text",
             html: mailBody.html
-        })
-        console.log(info.messageId);
+        });
+
+        console.log('Email sent successfully:', {
+            messageId: info.messageId,
+            response: info.response,
+            accepted: info.accepted,
+            rejected: info.rejected
+        });
+        return true;
     } catch (error) {
-        console.error(error);
+        console.error('Failed to send email:', {
+            error: error.message,
+            code: error.code,
+            command: error.command,
+            responseCode: error.responseCode,
+            response: error.response
+        });
+        throw error;
     }
 }
 

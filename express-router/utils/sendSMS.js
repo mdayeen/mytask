@@ -13,15 +13,36 @@ const client = new twilio(accountSid, authToken);
 // }
 async function sendSMS(smsbody) {
     try {
-        let message = await client.messages
-            .create({
-                body: smsbody.body,
-                from: TWILIO_NUMBER,
-                to: smsbody.to
-            })
-        console.log(message.sid);
+        // Log the SMS configuration (excluding auth token)
+        console.log('SMS Configuration:', {
+            accountSid: accountSid,
+            from: TWILIO_NUMBER,
+            to: smsbody.to
+        });
+
+        // Ensure phone number is in E.164 format
+        const formattedNumber = smsbody.to.startsWith('+') ? smsbody.to : `+${smsbody.to}`;
+
+        let message = await client.messages.create({
+            body: smsbody.body,
+            from: TWILIO_NUMBER,
+            to: formattedNumber
+        });
+
+        console.log('SMS sent successfully:', {
+            sid: message.sid,
+            status: message.status,
+            to: message.to
+        });
+        return true;
     } catch (error) {
-        console.error(error)
+        console.error('Failed to send SMS:', {
+            error: error.message,
+            code: error.code,
+            status: error.status,
+            moreInfo: error.moreInfo
+        });
+        throw error;
     }
 }
 export default sendSMS;

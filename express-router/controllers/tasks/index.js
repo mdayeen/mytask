@@ -13,40 +13,22 @@ const router = express.Router();
 
 router.post("/", authMiddleware, scheduleTaskValidation(), errorMiddleware, async (req, res) => {
   try {
-
     const payload = req.payload;
-    // console.log(payload);
     if (!payload) {
       return res.status(401).json({ error: "Unauthorised Access" });
     }
 
-    //Check Req.body
     let { taskname, deadline } = req.body;
-
     let present_time = new Date();
-    // console.log(present_time);
-
-    //Check Validation for 30 mins and 30 Days
     let difference = new Date(deadline) - present_time;
-    // console.log(difference);
-
+    
     //Get Reminders
     let reminders = [];
-
-    let reminder1 = new Date(+present_time + difference / 4);
-    // console.log(reminder1);
-
-    let reminder2 = new Date(+present_time + difference / 2);
-    // console.log(reminder2);
-
-    let reminder3 = new Date(+present_time + difference / (4 / 3));
-    // console.log(reminder3);
-
+    let reminder1 = new Date(present_time);
+    let remaining_time = new Date(deadline) - reminder1;
+    let reminder2 = new Date(+reminder1 + remaining_time / 3);
+    let reminder3 = new Date(+reminder1 + (remaining_time * 2) / 3);
     reminders.push(reminder1, reminder2, reminder3, new Date(deadline));
-    // console.log(reminders);
-
-    let taskData = await Tasks.findOne({ user: payload.user_id }).populate("user", ["firstname", "phone", "email"]);
-    // console.log(taskData);
 
     let task_data = {
       taskname,
@@ -55,37 +37,39 @@ router.post("/", authMiddleware, scheduleTaskValidation(), errorMiddleware, asyn
       reminders,
     };
 
-    taskData.tasks.push(task_data);
+    let taskData = await Tasks.findOne({ user: payload.user_id }).populate("user", ["firstname", "phone", "email"]);
 
-    await taskData.save();
-    res.status(200).json({ success: "Task wask Added Successfully" });
+    if (!taskData) {
+      taskData = new Tasks({
+        user: payload.user_id,
+        tasks: [task_data]
+      });
+      await taskData.save();
+      await taskData.populate("user", ["firstname", "phone", "email"]);
+    } else {
+      taskData.tasks.push(task_data);
+      await taskData.save();
+    }
+    
+    res.status(200).json({ success: "Task was Added Successfully" });
 
+    // Comment out reminder scheduling for now
+    /*
     let job_id = taskData.tasks[taskData.tasks.length - 1]._id.toString();
-    // console.log(job_id);
-
     task_data.reminders.forEach((ele, i) => {
-      scheduleJob(`${job_id}_${i}`, ele, () => {
-        if (reminders.length - 1 == i) {
-          sendEmail({
-            subject: `This is a Deadline Reminder for your Task ${task_data.taskname}`,
-            to: taskData.user.email,
-            html: `<p>Hi ${taskData.user.firstname}, <br>
-            			Your deadline for  ${taskname} has been passed. <br>
-            			<b>CFI Tasky App</b>
-            			</p>`,
-          });
-        } else {
-          sendEmail({
-            subject: `This is a Reminder for your Task ${task_data.taskname}`,
-            to: taskData.user.email,
-            html: `<p>Hi ${taskData.user.firstname}, <br>
-            			This is a Reminder - ${i + 1} to Complete your Task ${taskname} <br>
-            			<b>CFI Tasky App</b>
-            			</p>`,
-          });
+      scheduleJob(`${job_id}_${i}`, ele, async () => {
+        try {
+          if (reminders.length - 1 == i) {
+            await sendEmail({...});
+          } else {
+            await sendEmail({...});
+          }
+        } catch (error) {
+          console.error(`Failed to send reminder email for task ${task_data.taskname}:`, error);
         }
       });
     })
+    */
 
   } catch (error) {
     console.log(error);
@@ -122,7 +106,7 @@ router.get("/:task_id", authMiddleware, async (req, res) => {
     // console.log(taskFound);
 
     if (!taskFound) {
-      res.status(404).json({ "error": "Task Not Found" });
+      return res.status(404).json({ "error": "Task Not Found" });
     }
 
     res.status(200).json({ success: "Task Found", task: taskFound });
@@ -173,89 +157,61 @@ router.delete("/:task_id", authMiddleware, async (req, res) => {
 router.put("/:task_id", authMiddleware, editTaskValidation(), errorMiddleware, async (req, res) => {
   try {
     let task_id = req.params.task_id;
-
     const payload = req.payload;
-    // console.log(payload);
     if (!payload) {
       return res.status(401).json({ error: "Unauthorised Access" });
     }
 
     let { taskname, deadline, isCompleted } = req.body;
-
     let utc_deadline = new Date(deadline);
-
     let present_time = new Date();
-
-    //Check Validation for 30 mins and 30 Days
     let difference = utc_deadline - present_time;
 
-    //Get Reminders
     let reminders = [];
-
-    let reminder1 = new Date(+present_time + difference / 4);
-    // console.log(reminder1);
-
-    let reminder2 = new Date(+present_time + difference / 2);
-    // console.log(reminder2);
-
-    let reminder3 = new Date(+present_time + difference / (4 / 3));
-    // console.log(reminder3);
-
+    let reminder1 = new Date(present_time);
+    let remaining_time = new Date(deadline) - reminder1;
+    let reminder2 = new Date(+reminder1 + remaining_time / 3);
+    let reminder3 = new Date(+reminder1 + (remaining_time * 2) / 3);
     reminders.push(reminder1, reminder2, reminder3, new Date(deadline));
-    // console.log(reminders);
 
     let taskData = await Tasks.findOne({ user: payload.user_id }).populate("user", ["firstname", "email", "phone"]);
-    // console.log("Line 208",taskData.tasks);
-    // console.log(task_id);
     let taskFound = taskData.tasks.find((ele) => ele._id.toString() == task_id);
-    // console.log("Line 211",taskFound);
 
     if (!taskFound) {
-      res.status(404).json({ "error": "Task Not Found" });
+      return res.status(404).json({ "error": "Task Not Found" });
     }
-    // console.log("Line 216",taskFound._id);
-    console.log("Line 217",taskFound.reminders);
+
     taskFound.reminders.forEach((ele, i) => {
       cancelJob(`${taskFound._id}_${i}`)
     })
 
-    // taskIndex.task_id = task_id;
     taskFound.taskname = taskname;
-    // console.log(taskFound.taskname);
     taskFound.deadline = new Date(deadline);
     taskFound.isCompleted = isCompleted;
     taskFound.reminders = reminders;
 
-    // Save To DB
     await taskData.save();
-    res.status(200).json({ success: "Reminder Has Been Edited" });
+    res.status(200).json({ success: "Task Has Been Edited" });
 
+    // Comment out reminder rescheduling for now
+    /*
     if (isCompleted == false) {
       let job_id = taskFound._id.toString();
       reminders.forEach((ele, i) => {
-        scheduleJob(`${job_id}_${i}`, ele, () => {
-          if (reminders.length - 1 == i) {
-            sendEmail({
-              subject: `This is a Deadline Reminder for your Task ${taskname}`,
-              to: taskData.user.email,
-              html: `<p>Hi ${taskData.user.firstname}, <br>
-                            Your deadline for  ${taskname} has been passed. <br>
-                            <b>CFI Tasky App</b>
-                            </p>`,
-            });
-          } else {
-            sendEmail({
-              subject: `This is a Reminder for your Task ${taskname}`,
-              to: taskData.user.email,
-              html: `<p>Hi ${taskData.user.firstname}, <br>
-                            This is a Reminder - ${i + 1} to Complete your Task ${taskname} <br>
-                            <b>CFI Tasky App</b>
-                            </p>`,
-            });
+        scheduleJob(`${job_id}_${i}`, ele, async () => {
+          try {
+            if (reminders.length - 1 == i) {
+              await sendEmail({...});
+            } else {
+              await sendEmail({...});
+            }
+          } catch (error) {
+            console.error(`Failed to send reminder email for task ${taskname}:`, error);
           }
         });
       })
     }
+    */
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });

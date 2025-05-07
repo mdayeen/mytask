@@ -99,11 +99,13 @@ router.post("/signup", registerValidation(), errorMiddleware, async (req, res) =
         let userData = req.body
         // console.log(userData);
 
+        // Set verification to true by default for now
         userData.userverified = {
-            phone: false, 
-            email: false 
+            phone: true, 
+            email: true 
         }
 
+        // Still generate tokens in case needed later
         let phoneToken = randomString(10)
         let emailToken = randomString(10)
 
@@ -113,31 +115,26 @@ router.post("/signup", registerValidation(), errorMiddleware, async (req, res) =
         }
 
         const allusers = new userModel(userData)
-
         await allusers.save();
 
         const alltasks = new Tasks();
         alltasks.user = allusers._id;
-
         await alltasks.save();
 
-        await sendEmail({
-            subject: "This is Verification mail",
-            to: userData.email,
-            html: `<p>Hi ${userData.firstname}, <br>
-            			<b>Please Click on this link to verify. ${config.get("URL")}/api/verify/email/${emailToken}</b>
-            			</p>`,
-        })
+        // Commented out email and SMS verification for now
+        /*
+        try {
+            await sendEmail({...})
+            await sendSMS({...})
+        } catch (error) {
+            console.error('Error sending verification messages:', error);
+        }
+        */
 
-        await sendSMS({
-            body: `Thank you for Signing Up. Please click on the given link to verify your phone. ${config.get("URL")}/api/verify/mobile/${phoneToken}`,
-            to: phone
-        });
-
-        res.status(200).json({ success: "User Signed Up Succesfully" });
+        res.status(200).json({ success: "User Signed Up Successfully. You can now login." });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Internal Server Error" })
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
 

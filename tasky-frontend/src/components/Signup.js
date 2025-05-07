@@ -98,7 +98,7 @@ function Signup({ alert, showAlert }) {
             borderRadius: 3,
             overflow: 'hidden',
             display: 'flex',
-            flexDirection: { xs: 'column-reverse', md: 'row' },
+            flexDirection: { xs: 'column', md: 'row' },
             height: { xs: 'auto', md: '85vh' },
             maxHeight: { md: '800px' },
             boxShadow: '0 15px 35px rgba(0, 0, 0, 0.25)', // Enhanced shadow for better depth
@@ -131,29 +131,9 @@ function Signup({ alert, showAlert }) {
                 }
               }}
             >
-              <Box display="flex" alignItems="center" mb={3}>
-                <Box 
-                  sx={{ 
-                    backgroundColor: '#4568dc', 
-                    borderRadius: '50%', 
-                    width: 42, 
-                    height: 42,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    mr: 2
-                  }}
-                >
-                  <FaUserPlus size={20} color="#ffffff" />
-                </Box>
-                <Typography variant="h5" fontWeight={600}>
-                  Create Account
-                </Typography>
-              </Box>
+             
 
-              <Typography variant="body2" color="text.secondary" mb={3}>
-                Join thousands of users who trust My-Tasky to manage their daily tasks effectively.
-              </Typography>
+             
 
               {alert && (
                 <Alert severity={alert.type} sx={{ mb: 3, borderRadius: 1 }}>
@@ -161,9 +141,10 @@ function Signup({ alert, showAlert }) {
                 </Alert>
               )}
 
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+              {/* <Grid container spacing={2}> */}
+                {/* <Grid item xs={12} sm={6} > */}
                   <TextField
+                  margin='normal'
                     fullWidth
                     label="First Name"
                     name="firstname"
@@ -179,9 +160,10 @@ function Signup({ alert, showAlert }) {
                       ),
                     }}
                   />
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                {/* </Grid> */}
+                {/* <Grid item xs={12} sm={6}> */}
                   <TextField
+                    margin='normal'
                     fullWidth
                     label="Last Name"
                     name="lastname"
@@ -197,8 +179,8 @@ function Signup({ alert, showAlert }) {
                       ),
                     }}
                   />
-                </Grid>
-              </Grid>
+                {/* </Grid> */}
+              {/* </Grid> */}
 
               <TextField
                 margin="normal"
@@ -235,9 +217,10 @@ function Signup({ alert, showAlert }) {
                 }}
               />
               
-              <Grid container spacing={2} sx={{ mt: 0.5 }}>
-                <Grid item xs={12} sm={6}>
+              {/* <Grid container spacing={2} sx={{ mt: 0.5 }}> */}
+                {/* <Grid item xs={12} sm={6}> */}
                   <TextField
+                  margin='normal'
                     fullWidth
                     label="Password"
                     type="password"
@@ -253,9 +236,10 @@ function Signup({ alert, showAlert }) {
                       ),
                     }}
                   />
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                {/* </Grid> */}
+                {/* <Grid item xs={12} sm={6}> */}
                   <TextField
+                    margin='normal'
                     fullWidth
                     label="Confirm Password"
                     type="password"
@@ -271,8 +255,8 @@ function Signup({ alert, showAlert }) {
                       ),
                     }}
                   />
-                </Grid>
-              </Grid>
+                {/* </Grid> */}
+              {/* </Grid> */}
                             
               <TextField
                 margin="normal"

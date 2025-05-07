@@ -234,6 +234,21 @@ function Dashboard() {
             <Typography variant="subtitle1" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
               {dayjs().format("dddd, MMMM D, YYYY")}
             </Typography>
+            <Alert 
+              severity="warning" 
+              sx={{ 
+                mt: 2,
+                backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                color: '#fff',
+                border: '1px solid rgba(255, 152, 0, 0.3)',
+                '& .MuiAlert-icon': {
+                  color: '#ffa726'
+                },
+                backdropFilter: 'blur(8px)'
+              }}
+            >
+              Reminder alerts are currently disabled due to insufficient funds
+            </Alert>
           </Box>
 
           <Box 
@@ -268,10 +283,9 @@ function Dashboard() {
                 }
               }}
             >
-              <InputLabel>Filter By</InputLabel>
               <Select
                 value={filterStatus}
-                label="Filter By"
+                displayEmpty
                 onChange={(e) => setFilterStatus(e.target.value)}
                 MenuProps={{
                   PaperProps: {
@@ -279,6 +293,9 @@ function Dashboard() {
                   }
                 }}
               >
+                <MenuItem disabled value="">
+                  <em>Filter By</em>
+                </MenuItem>
                 <MenuItem value="all">All Tasks</MenuItem>
                 <MenuItem value="completed">Completed</MenuItem>
                 <MenuItem value="pending">Pending</MenuItem>
@@ -296,10 +313,9 @@ function Dashboard() {
                 }
               }}
             >
-              <InputLabel>Sort By</InputLabel>
               <Select
                 value={sortBy}
-                label="Sort By"
+                displayEmpty
                 onChange={(e) => setSortBy(e.target.value)}
                 MenuProps={{
                   PaperProps: {
@@ -307,6 +323,9 @@ function Dashboard() {
                   }
                 }}
               >
+                <MenuItem disabled value="">
+                  <em>Sort By</em>
+                </MenuItem>
                 <MenuItem value="deadline">Deadline</MenuItem>
                 <MenuItem value="name">Name</MenuItem>
                 <MenuItem value="status">Status</MenuItem>

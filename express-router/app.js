@@ -18,7 +18,7 @@ const port = process.env.PORT || 5000;
 //APP LEVEL MIDDLE WARE
 app.use(express.json());
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://mytasky.vercel.app', 'https://mytasky-frontend.vercel.app'],
+  origin: ['http://localhost:3000', 'https://mytasky.vercel.app', 'https://mytasky-frontend.vercel.app', 'https://mytask-beryl.vercel.app'],
   credentials: true
 }));
 

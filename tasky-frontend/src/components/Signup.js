@@ -16,9 +16,8 @@ import {
   FaArrowRight 
 } from 'react-icons/fa';
 
-const API_URL = import.meta.env.VITE_API_URL;
-// const API_URL = "http://localhost:5000"
-
+// Use environment variable with fallback
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 function Signup({ alert, showAlert }) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);

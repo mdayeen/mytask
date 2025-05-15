@@ -1,20 +1,4 @@
 {
-  "PORT": 5500,
-  "URL": "http://172.27.186.101:5500",
-  "PRIVATE_KEY": "codeforindia",
-
-  "SEND_SMS": {
-    "TWILIO_SID": "AC086f042efd1ef9215005f3c018dbfce5",
-    "TWILIO_TOKEN": "0a875eb3dd173d2b1baf435ec404d1ed",
-    "TWILIO_NUMBER": "+13236161210"
-  },
-  
-  "EMAIL_SMTP": {
-    "HOST": "live.smtp.mailtrap.io",
-    "AUTH": {
-      "USER": "api",
-      "PASSWORD": "41db9e578431193f888e7464e944a129"
-    },
-    "PORT": 587
-  }
+  "PORT": 5000,
+  "URL": "https://mytasky.onrender.com"
 }

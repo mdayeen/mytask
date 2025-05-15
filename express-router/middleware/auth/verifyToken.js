@@ -1,13 +1,9 @@
 import jwt from "jsonwebtoken";
-import config from "config";
-
-
-let private_key = config.get("PRIVATE_KEY");
 
 function authMiddleware(req, res, next) {
     try {
         const token = req.headers['auth-token'];
-        const payload = jwt.verify(token, private_key);
+        const payload = jwt.verify(token, process.env.PRIVATE_KEY);
         req.payload = payload;
         return next();
     } catch (error) {
@@ -15,4 +11,5 @@ function authMiddleware(req, res, next) {
         return res.status(401).json({ "error": "Unauthorised Access" });
     }
 }
+
 export default authMiddleware;

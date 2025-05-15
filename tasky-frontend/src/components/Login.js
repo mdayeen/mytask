@@ -13,6 +13,10 @@ import {
   FaArrowRight 
 } from 'react-icons/fa';
 
+// const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = "http://localhost:5000"
+
+
 function Login({ alert, showAlert }) {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +50,7 @@ function Login({ alert, showAlert }) {
     setIsSubmitting(true);
     
     try {
-      const res = await axios.post("/api/login", userData);
+      const res = await axios.post(`${API_URL}/api/login`, userData);
       localStorage.setItem("token", JSON.stringify({ token: res.data.token, role: res.data.role }));
       showAlert({ type: "success", msg: res.data.success });
       navigate("/dashboard");

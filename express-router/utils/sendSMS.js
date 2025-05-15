@@ -1,22 +1,17 @@
-import twilio from 'twilio';
-import config from "config";
+import twilio from "twilio";
 
-const { TWILIO_SID, TWILIO_TOKEN, TWILIO_NUMBER } = config.get("SEND_SMS");
-
-const accountSid = TWILIO_SID;
-const authToken = TWILIO_TOKEN;
-const client = new twilio(accountSid, authToken);
-
-// let smsbody = 3eb5d53adb7b1e758ffeeec2f6972327{
-//     body: "this is a reminder",
-//     to: "+919014828737"
-// }
 async function sendSMS(smsbody) {
     try {
+        // Initialize Twilio client
+        const client = twilio(
+            process.env.TWILIO_SID,
+            process.env.TWILIO_TOKEN
+        );
+
         // Log the SMS configuration (excluding auth token)
         console.log('SMS Configuration:', {
-            accountSid: accountSid,
-            from: TWILIO_NUMBER,
+            accountSid: process.env.TWILIO_SID,
+            from: process.env.TWILIO_NUMBER,
             to: smsbody.to
         });
 
@@ -25,7 +20,7 @@ async function sendSMS(smsbody) {
 
         let message = await client.messages.create({
             body: smsbody.body,
-            from: TWILIO_NUMBER,
+            from: process.env.TWILIO_NUMBER,
             to: formattedNumber
         });
 
@@ -45,7 +40,14 @@ async function sendSMS(smsbody) {
         throw error;
     }
 }
+
 export default sendSMS;
+
+// let smsbody = 3eb5d53adb7b1e758ffeeec2f6972327{
+//     body: "this is a reminder",
+//     to: "+919014828737"
+// }
+
 // sendSMS({
 //     body: `Thank you for Signing Up. Please click on the given link to verify your phone. http://192.168.68.133:5000/api/verify/mobile/`,
 //     to: "+919703534849"

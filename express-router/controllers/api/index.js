@@ -188,8 +188,7 @@ router.get("/auth", async (req, res) => {
         if (!token) {
             return res.status(401).json({ error: "Unauthorised Access" });
         }
-        let privatekey = config.get("PRIVATE_KEY");
-        let payload = jwt.verify(token, privatekey);
+        let payload = jwt.verify(token, process.env.PRIVATE_KEY);
         res.status(200).json({ success: "Authentication Successful", payload });
     } catch (error) {
         console.error(error);

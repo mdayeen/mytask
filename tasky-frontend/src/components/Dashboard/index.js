@@ -18,11 +18,16 @@ import { Add, FormatListBulleted, CheckCircleOutline } from "@mui/icons-material
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import dayjs from "dayjs";
+import axiosInstance from '../../utils/axios';
 
 import { StyledPaper, StyledBadge } from "./StyledComponents";
 import { getSortedAndFilteredTasks } from "./utils";
 import TaskList from "./TaskList";
 import TaskDialog from "./TaskDialog";
+
+// const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = "http://localhost:5000"
+
 
 // Transition components
 const SlideTransition = React.forwardRef(function Transition(props, ref) {
@@ -61,13 +66,8 @@ function Dashboard() {
 
   const fetchTasks = async () => {
     try {
-      const token = JSON.parse(localStorage.getItem("token")).token;
-      await axios.get("/api/auth", {
-        headers: { "auth-token": token },
-      });
-      const { data } = await axios.get("/api/task/tasks", {
-        headers: { "auth-token": token },
-      });
+      await axiosInstance.get('/api/auth');
+      const { data } = await axiosInstance.get('/api/task/tasks');
       setTasks(data.alltasks && Array.isArray(data.alltasks.tasks) ? data.alltasks.tasks : []);
     } catch (error) {
       console.error(error.response?.data || error.message);
@@ -118,28 +118,21 @@ function Dashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = JSON.parse(localStorage.getItem("token")).token;
       if (isEditing) {
-        await axios.put(
+        await axiosInstance.put(
           `/api/task/${editingTaskId}`,
           {
             ...taskForm,
             deadline: taskForm.deadline.toISOString(),
-          },
-          {
-            headers: { "auth-token": token },
           }
         );
         setSuccessMessage("Task updated successfully!");
       } else {
-        await axios.post(
-          "/api/task",
+        await axiosInstance.post(
+          `/api/task`,
           {
             ...taskForm,
             deadline: taskForm.deadline.toISOString(),
-          },
-          {
-            headers: { "auth-token": token },
           }
         );
         setSuccessMessage("Task added successfully!");
@@ -154,10 +147,7 @@ function Dashboard() {
 
   const handleDelete = async (id) => {
     try {
-      const token = JSON.parse(localStorage.getItem("token")).token;
-      await axios.delete(`/api/task/${id}`, {
-        headers: { "auth-token": token },
-      });
+      await axiosInstance.delete(`/api/task/${id}`);
       setTasks(tasks.filter((task) => task._id !== id));
       setSuccessMessage("Task deleted successfully!");
       setShowSuccess(true);
@@ -168,16 +158,12 @@ function Dashboard() {
 
   const handleStatusToggle = async (task) => {
     try {
-      const token = JSON.parse(localStorage.getItem("token")).token;
-      await axios.put(
+      await axiosInstance.put(
         `/api/task/${task._id}`,
         {
           ...task,
           isCompleted: !task.isCompleted,
           deadline: new Date(task.deadline).toISOString(),
-        },
-        {
-          headers: { "auth-token": token },
         }
       );
       setTasks(tasks.map((t) => 

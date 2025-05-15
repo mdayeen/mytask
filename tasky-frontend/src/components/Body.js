@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
+import hImg from '../assets/image.png'
 import { 
   Box, 
   Container, 
@@ -268,7 +269,7 @@ function HomePage() {
       <HeroSection>
         <Container maxWidth="lg">
           <Grid container spacing={4} alignItems="center">
-            <Grid item xs={12} md={7}>
+            <Grid item xs={12} md={7} sx={{ m: 18 }}>
               <Fade in={animateHero} timeout={1000}>
                 <Box sx={{ color: 'white' }}>
                   <Typography 
@@ -346,7 +347,7 @@ function HomePage() {
               <Fade in={animateHero} timeout={1500}>
                 <Box
                   component="img"
-                  src="/api/placeholder/600/600"
+                  src={hImg}
                   alt="Task Management App"
                   sx={{
                     width: '100%',

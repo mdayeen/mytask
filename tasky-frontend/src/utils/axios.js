@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Use localhost for development, production URL for production
 const API_URL = process.env.NODE_ENV === 'production' 
-  ? "https://mytasky.onrender.com"
+  ? "https://mytask-dppr.onrender.com"
   : "http://localhost:5000";
 
 const axiosInstance = axios.create({
